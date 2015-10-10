@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ew" n>
+<head>
+<meta charset="UTF-8">
+<title>AngularJS</title>
+</head>
+<body>
+		
+		<div ng-app="apiApp" ng-controller="apiAppCtrl as vm">
+		  <h1>JSONP</h1>
+		  <p>
+		      Busca cerveza:
+		      <input type="text" ng-model="vm.nombre"> <input type="button" value="Buscar" ng-click="vm.buscaCervezas()">
+		  </p>
+		  <ul>
+		      <li ng-repeat="cerveza in vm.cervezas"><span>{{cerveza.name}},</span> {{ cerveza.description }}</li>
+		  </ul>
+		</div>
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js" > </script>
+		<script type="text/javascript">
+			angular
+		    	.module('apiApp', [])
+		    	.controller('apiAppCtrl', controladorPrincipal);
+
+			function controladorPrincipal($scope, $http){
+		    var vm=this;
+		    
+		    vm.buscaCervezas = function(){
+		        var url = "http://api.openbeerdatabase.com/v1/beers.json?callback=JSON_CALLBACK";
+		        if(vm.nombre){
+		            url += "&query=" + vm.nombre;
+		        }
+		        $http.jsonp(url).success(function(respuesta){
+		            console.log("res:", respuesta);
+		            vm.cervezas = respuesta.beers;
+		        });
+		    }
+}
+		</script>
+</body>
+</html>
